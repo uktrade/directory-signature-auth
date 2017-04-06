@@ -1,29 +1,90 @@
 from hashlib import sha256
+from urllib.parse import urlsplit
 
-from django.conf import settings
 from django.utils.crypto import constant_time_compare
 
 
-class SignatureRejection:
+class Signer:
+    secret = None
 
-    @classmethod
-    def generate_signature(self, secret, path, body):
-        salt = bytes(secret, "utf-8")
-        path = bytes(path, "utf-8")
-        return sha256(path + body + salt).hexdigest()
+    def __init__(self, secret):
+        self.secret = secret
 
-    @classmethod
-    def test_signature(self, request, secret=None):
-        secret = secret or settings.PROXY_SIGNATURE_SECRET
-        signature_header = settings.SIGNATURE_HEADERS.get(secret)
-        signature_header_value = request.META.get(signature_header)
+    def generate_signature(self, path, body):
+        hash_object = sha256()
+        if path:
+            hash_object.update(ensure_bytes(path))
+        if body:
+            hash_object.update(ensure_bytes(body))
+        hash_object.update(ensure_bytes(self.secret))
+        return hash_object.hexdigest()
 
-        if not signature_header_value:
+
+class RequestSigner:
+    header_name = 'X-Signature'
+    signer = None
+
+    def __init__(self, secret):
+        self.signer = Signer(secret)
+
+    def get_signature_headers(self, url, body):
+        path = get_path(url)
+        signature = self.signer.generate_signature(path=path, body=body)
+        return {
+            self.header_name: signature
+        }
+
+
+class RequestSignatureChecker:
+    header_name = 'HTTP_X_SIGNATURE'
+    signer = None
+
+    def __init__(self, secret):
+        self.signer = Signer(secret)
+
+    def test_signature(self, request):
+        """
+        Thest that the signature header matches the expected value.
+
+        Args
+            request (django.http.Request): The request to check the properties.
+        Returns:
+            bool: False if rejected, True if accepted
+
+        """
+
+        provided_value = request.META.get(self.header_name)
+
+        if not provided_value:
             return False
 
-        expected = self.generate_signature(
-            secret,
-            request.get_full_path(),
-            request.body,
+        expected_value = self.signer.generate_signature(
+            path=request.get_full_path(),
+            body=request.body,
         )
-        return constant_time_compare(expected, signature_header_value)
+        return constant_time_compare(expected_value, provided_value)
+
+
+def ensure_bytes(value):
+    value = value or ''
+    if isinstance(value, str):
+        value = bytes(value, "utf-8")
+    return value
+
+
+def get_path(url):
+    """
+    Get the path from a given url, including the querystring.
+
+    Args:
+        url (str)
+    Returns:
+        str
+
+    """
+
+    url = urlsplit(url)
+    path = url.path
+    if url.query:
+        path += "?{}".format(url.query)
+    return path
