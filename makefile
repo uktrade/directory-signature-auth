@@ -8,7 +8,7 @@ test_requirements:
 	pip install -r requirements_test.txt
 
 flake8:
-	flake8 . --exclude=migrations
+	flake8 . --exclude=.venv
 
 pytest:
 	pytest . --cov=. $(pytest_args)

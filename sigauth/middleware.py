@@ -1,16 +1,26 @@
+import http
+
 from django.conf import settings
 from django.http import HttpResponse
 
-from sigauth.utils import SignatureRejection
+from sigauth.utils import RequestSignatureChecker
 
 
-class SignatureRejectionMiddleware(object):
+class SignatureCheckMiddlewareBase:
+
+    secret = None
+    request_checker = None
+
+    def __init__(self, *args, **kwargs):
+        assert self.secret, "subclass this and and set the `secret` property"
+        self.request_checker = RequestSignatureChecker(self.secret)
+        super().__init__(*args, **kwargs)
 
     def process_request(self, request):
         path = request.get_full_path()
 
         if path not in settings.URLS_EXCLUDED_FROM_SIGNATURE_CHECK:
-            if not SignatureRejection.test_signature(
-                request, secret=settings.PROXY_SIGNATURE_SECRET
-            ):
-                return HttpResponse('Unauthorized', status=401)
+            if not self.request_checker.test_signature(request):
+                return HttpResponse(
+                    'Unauthorized', status=http.client.UNAUTHORIZED
+                )
