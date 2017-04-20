@@ -1,5 +1,3 @@
-import http
-
 from sigauth.middleware import SignatureCheckMiddlewareBase
 from sigauth.utils import RequestSigner
 
@@ -16,7 +14,7 @@ def test_signature_rejection_rejects_missing_signature(rf):
 
     response = SignatureRejectionMiddleware().process_request(request)
 
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == 401
 
 
 def test_signature_rejection_rejects_invalid_signature(rf):
@@ -25,7 +23,7 @@ def test_signature_rejection_rejects_invalid_signature(rf):
 
     response = SignatureRejectionMiddleware().process_request(request)
 
-    assert response.status_code == http.client.UNAUTHORIZED
+    assert response.status_code == 401
 
 
 def test_signature_rejection_accepts_valid_signature(rf, settings):
