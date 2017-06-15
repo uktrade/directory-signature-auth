@@ -5,6 +5,11 @@ Export Directory internal API client.
 
 [![CircleCI](https://circleci.com/gh/uktrade/directory-signature-auth/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/directory-signature-auth/tree/master)
 
+## Coverage
+
+[![codecov](https://codecov.io/gh/uktrade/directory-signature-auth/branch/master/graph/badge.svg)](https://codecov.io/gh/uktrade/directory-signature-auth)
+
+
 ## Installation
 
 ```shell
