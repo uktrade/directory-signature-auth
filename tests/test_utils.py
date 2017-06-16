@@ -4,13 +4,23 @@ from sigauth import utils
 SECRET = 'super-duper-secret'
 
 
-def test_signer():
+def test_signer_without_body():
     signer = utils.Signer(SECRET)
 
     signature = signer.generate_signature('/', '')
 
     assert signature == (
         '7d219ea98ca799140bf8bdb13af042e84b0c5c389d00a954fe00d8790a3c8f31'
+    )
+
+
+def test_signer_with_body():
+    signer = utils.Signer(SECRET)
+
+    signature = signer.generate_signature('/', 'body')
+
+    assert signature == (
+        '5ac5a064af699c450fc967ebf71759490cc2320b8deae1d918b1440535ae86ec'
     )
 
 
