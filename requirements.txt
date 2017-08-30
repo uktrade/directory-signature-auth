@@ -4,5 +4,5 @@
 #
 #    pip-compile --output-file requirements.txt requirements.ini
 #
-django==1.9.13
+django==1.10.7
 djangorestframework==3.4.7
