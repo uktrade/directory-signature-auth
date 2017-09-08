@@ -1,4 +1,12 @@
 # directory-signature-auth
+
+[![code-climate-image]][code-climate]
+[![circle-ci-image]][circle-ci]
+[![codecov-image]][codecov]
+[![gemnasium-image]][gemnasium]
+
+---
+
 Reject tampered requests. Useful for multi-tier architecture.
 
 The client implements `RequestSigner` to generate a secret-salted hash of the request URL and body. The secret-salt is shared with the target server.
@@ -101,3 +109,16 @@ pip install -e git+https://git@github.com/uktrade/directory-signature-auth.git@0
     $ git clone https://github.com/uktrade/directory-signature-auth
     $ cd directory-signature-auth
     $ make
+
+
+[code-climate-image]: https://codeclimate.com/github/uktrade/directory-signature-auth/badges/issue_count.svg
+[code-climate]: https://codeclimate.com/github/uktrade/directory-signature-auth
+
+[circle-ci-image]: https://circleci.com/gh/uktrade/directory-signature-auth/tree/master.svg?style=svg
+[circle-ci]: https://circleci.com/gh/uktrade/directory-signature-auth/tree/master
+
+[codecov-image]: https://codecov.io/gh/uktrade/directory-signature-auth/branch/master/graph/badge.svg
+[codecov]: https://codecov.io/gh/uktrade/directory-signature-auth
+
+[gemnasium-image]: https://gemnasium.com/badges/github.com/uktrade/directory-signature-auth.svg
+[gemnasium]: https://gemnasium.com/github.com/uktrade/directory-signature-auth
