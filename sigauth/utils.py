@@ -1,46 +1,54 @@
-from hashlib import sha256
 from urllib.parse import urlsplit
 
-from django.utils.crypto import constant_time_compare
+from mohawk import Receiver, Sender
+from mohawk.exc import HawkFail
 
 
-class Signer:
-    secret = None
-
-    def __init__(self, secret):
-        self.secret = secret
-
-    def generate_signature(self, path, body):
-        hash_object = sha256()
-        if path:
-            hash_object.update(ensure_bytes(path))
-        if body:
-            hash_object.update(ensure_bytes(body))
-        hash_object.update(ensure_bytes(self.secret))
-        return hash_object.hexdigest()
+default_content_type = 'text/plain'
+default_content = ''
 
 
 class RequestSigner:
     header_name = 'X-Signature'
-    signer = None
+    secret = None
+    sender_id = 'directory'
+    algorithm = 'sha256'
 
     def __init__(self, secret):
-        self.signer = Signer(secret)
+        self.secret = secret
 
-    def get_signature_headers(self, url, body):
-        path = get_path(url)
-        signature = self.signer.generate_signature(path=path, body=body)
+    def get_signature_headers(self, url, body, method, content_type):
+        sender = Sender(
+            {
+                'id': self.sender_id,
+                'key': self.secret,
+                'algorithm': self.algorithm
+            },
+            get_path(url),
+            method,
+            content=get_content(body),
+            content_type=get_content_type(content_type),
+        )
+
         return {
-            self.header_name: signature
+            self.header_name: sender.request_header
         }
 
 
 class RequestSignatureChecker:
     header_name = 'HTTP_X_SIGNATURE'
-    signer = None
+    secret = None
+    algorithm = 'sha256'
 
     def __init__(self, secret):
-        self.signer = Signer(secret)
+        self.secret = secret
+
+    def lookup_credentials(self, sender_id):
+        return {
+            'id': sender_id,
+            'key': self.secret,
+            'algorithm': self.algorithm
+        }
 
     def test_signature(self, request):
         """
@@ -49,27 +57,22 @@ class RequestSignatureChecker:
         Args
             request (django.http.Request): The request to check the properties.
         Returns:
-            bool: False if rejected, True if accepted
+            bool or Receiver : False if rejected, Receiver instance if accepted
 
         """
 
-        provided_value = request.META.get(self.header_name)
-
-        if not provided_value:
+        content_type = get_content_type(request.META.get('CONTENT_TYPE'))
+        try:
+            return Receiver(
+                self.lookup_credentials,
+                request.META.get(self.header_name),
+                request.get_full_path(),
+                request.method,
+                content=get_content(request.body),
+                content_type=get_content_type(content_type),
+            )
+        except HawkFail:
             return False
-
-        expected_value = self.signer.generate_signature(
-            path=request.get_full_path(),
-            body=request.body,
-        )
-        return constant_time_compare(expected_value, provided_value)
-
-
-def ensure_bytes(value):
-    value = value or ''
-    if isinstance(value, str):
-        value = bytes(value, "utf-8")
-    return value
 
 
 def get_path(url):
@@ -88,3 +91,11 @@ def get_path(url):
     if url.query:
         path += "?{}".format(url.query)
     return path
+
+
+def get_content_type(content_type):
+    return default_content_type if content_type is None else content_type
+
+
+def get_content(content):
+    return default_content if content is None else content
