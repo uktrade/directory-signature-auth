@@ -5,38 +5,35 @@ SECRET = 'super-duper-secret'
 
 
 def test_signer_without_body():
-    signer = utils.Signer(SECRET)
+    signer = utils.RequestSigner(secret=SECRET)
 
-    signature = signer.generate_signature('/', '')
-
-    assert signature == (
-        '7d219ea98ca799140bf8bdb13af042e84b0c5c389d00a954fe00d8790a3c8f31'
+    headers = signer.get_signature_headers(
+        url='http://e.co/',
+        body='',
+        method='POST',
+        content_type='application/json'
     )
+
+    assert 'id="directory' in headers[signer.header_name]
 
 
 def test_signer_with_body():
-    signer = utils.Signer(SECRET)
+    signer = utils.RequestSigner(secret=SECRET)
 
-    signature = signer.generate_signature('/', 'body')
-
-    assert signature == (
-        '5ac5a064af699c450fc967ebf71759490cc2320b8deae1d918b1440535ae86ec'
+    headers = signer.get_signature_headers(
+        url='http://e.co/',
+        body='content',
+        method='POST',
+        content_type='application/json'
     )
+
+    assert 'id="directory' in headers[signer.header_name]
 
 
 def test_request_signer_passes_correct_secret_to_signer(settings):
-    assert utils.RequestSigner(SECRET).signer.secret == SECRET
+    signer = utils.RequestSigner(secret=SECRET)
 
-
-def test_request_signer_uses_correct_header_name(settings):
-    request_signer = utils.RequestSigner(SECRET)
-    headers = request_signer.get_signature_headers(
-        url='http://e.co/', body=''
-    )
-
-    assert headers[request_signer.header_name] == (
-        '7d219ea98ca799140bf8bdb13af042e84b0c5c389d00a954fe00d8790a3c8f31'
-    )
+    assert signer.secret == SECRET
 
 
 def test_get_path_with_querystring():

@@ -5,9 +5,9 @@
 [![codecov-image]][codecov]
 [![gemnasium-image]][gemnasium]
 
----
+**Library implementing Hawk authentication scheme using a message authentication code (MAC) algorithm to provide partial HTTP request cryptographic verification.**
 
-Reject tampered requests. Useful for multi-tier architecture.
+---
 
 The client implements `RequestSigner` to generate a secret-salted hash of the request URL and body. The secret-salt is shared with the target server.
 
@@ -34,14 +34,16 @@ request_signer = RequestSigner(settings.API_SIGNATURE_SECRET)
 
 def send_request(method, url, body):
     request = requests.Request(method=method, url=url, body=body).prepare()
-    self.sign_request(request)
+    sign_request(request)
     return requests.Session().send(request)
 
 
 def sign_request(request):
     headers = request_signer.get_signature_headers(
         url=request.path_url,
-        body=request.body
+        body=request.body,
+        method=request.method,
+        content_type=request.headers.get('Content-Type'),
     )
     request.headers.update(headers)
 ```
@@ -89,19 +91,10 @@ class SignatureCheckMixin:
 
 Note that in the above examples, the client's `settings.API_SIGNATURE_SECRET` must be the same value as api's `settings.SIGNATURE_SECRET`
 
-## Build status
-
-[![CircleCI](https://circleci.com/gh/uktrade/directory-signature-auth/tree/master.svg?style=svg)](https://circleci.com/gh/uktrade/directory-signature-auth/tree/master)
-
-## Coverage
-
-[![codecov](https://codecov.io/gh/uktrade/directory-signature-auth/branch/master/graph/badge.svg)](https://codecov.io/gh/uktrade/directory-signature-auth)
-
-
 ## Installation
 
 ```shell
-pip install -e git+https://git@github.com/uktrade/directory-signature-auth.git@0.1.0#egg=directory-signature-auth
+pip install -e git+https://git@github.com/uktrade/directory-signature-auth.git@v1.0.0#egg=directory-signature-auth
 ```
 
 ## Development

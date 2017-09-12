@@ -3,6 +3,7 @@ from sigauth.utils import RequestSigner
 
 
 SECRET = 'super secret'
+SENDER_ID = 'test sender'
 
 
 class SignatureRejectionMiddleware(SignatureCheckMiddlewareBase):
@@ -19,7 +20,7 @@ def test_signature_rejection_rejects_missing_signature(rf):
 
 def test_signature_rejection_rejects_invalid_signature(rf):
 
-    request = rf.get('/', HTTP_X_SIGNATURE='NOT-CORRECT')
+    request = rf.get('/', HTTP_X_SIGNATURE='NOT-CORRECT', CONTENT_TYPE='')
 
     response = SignatureRejectionMiddleware().process_request(request)
 
@@ -29,10 +30,20 @@ def test_signature_rejection_rejects_invalid_signature(rf):
 def test_signature_rejection_accepts_valid_signature(rf, settings):
     # in practive the signature is generated on the server making the request.
     # on the requesting server, it will know the shared secret
-    request_signer = RequestSigner(SECRET)
-    signature = request_signer.signer.generate_signature(path='/', body='')
+    signer = RequestSigner(secret=SECRET)
 
-    request = rf.get('/', HTTP_X_SIGNATURE=signature)
+    headers = signer.get_signature_headers(
+        url='/',
+        body='',
+        method='GET',
+        content_type=''
+    )
+
+    request = rf.get(
+        '/',
+        HTTP_X_SIGNATURE=headers[signer.header_name],
+        CONTENT_TYPE='',
+    )
 
     response = SignatureRejectionMiddleware().process_request(request)
 
