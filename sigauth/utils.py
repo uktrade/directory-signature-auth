@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from urllib.parse import urlsplit
 
 from mohawk import Receiver, Sender
@@ -70,6 +72,7 @@ class RequestSignatureChecker:
                 request.method,
                 content=get_content(request.body),
                 content_type=get_content_type(content_type),
+                seen_nonce=check_request_replay,
             )
         except HawkFail:
             return False
@@ -99,3 +102,12 @@ def get_content_type(content_type):
 
 def get_content(content):
     return default_content if content is None else content
+
+
+def check_request_replay(sender_id, nonce, timestamp):
+    key = '{id}:{nonce}:{ts}'.format(id=sender_id, nonce=nonce, ts=timestamp)
+    if cache.get(key):
+        return True
+    else:
+        cache.set(key, True)
+        return False
