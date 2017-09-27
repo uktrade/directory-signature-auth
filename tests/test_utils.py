@@ -42,3 +42,28 @@ def test_get_path_with_querystring():
 
 def test_get_path_without_querystring():
     assert utils.get_path('http://e.co/aa/') == '/aa/'
+
+
+def test_test_signature_replay(rf):
+    signer = utils.RequestSigner(secret=SECRET)
+    checker = utils.RequestSignatureChecker(secret=SECRET)
+
+    headers = signer.get_signature_headers(
+        url='/',
+        body='',
+        method='GET',
+        content_type=''
+    )
+    request = rf.get(
+        '/',
+        HTTP_X_SIGNATURE=headers[signer.header_name],
+        CONTENT_TYPE='',
+    )
+    replayed_request = rf.get(
+        '/',
+        HTTP_X_SIGNATURE=headers[signer.header_name],
+        CONTENT_TYPE='',
+    )
+
+    assert checker.test_signature(request=request) is not False
+    assert checker.test_signature(request=replayed_request) is False
