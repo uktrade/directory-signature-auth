@@ -13,6 +13,7 @@ djangorestframework==3.4.7
 flake8==3.0.4
 idna==2.5                 # via requests
 mccabe==0.5.3             # via flake8
+mohawk==0.3.4
 py==1.4.34                # via pytest
 pycodestyle==2.0.0        # via flake8
 pyflakes==1.2.3           # via flake8
