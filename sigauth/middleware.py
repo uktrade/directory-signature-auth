@@ -17,9 +17,7 @@ class SignatureCheckMiddlewareBase:
         super().__init__(*args, **kwargs)
 
     def process_request(self, request):
-        path = request.get_full_path()
-
-        if path not in settings.URLS_EXCLUDED_FROM_SIGNATURE_CHECK:
+        if request.path not in settings.URLS_EXCLUDED_FROM_SIGNATURE_CHECK:
             if not self.request_checker.test_signature(request):
                 return HttpResponse(
                     'Unauthorized', status=http.client.UNAUTHORIZED.value

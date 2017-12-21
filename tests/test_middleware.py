@@ -48,3 +48,12 @@ def test_signature_rejection_accepts_valid_signature(rf, settings):
     response = SignatureRejectionMiddleware().process_request(request)
 
     assert response is None
+
+
+def test_signature_check_skipped(rf, settings):
+    settings.URLS_EXCLUDED_FROM_SIGNATURE_CHECK = ['/']
+    request = rf.get('/')
+
+    response = SignatureRejectionMiddleware().process_request(request)
+
+    assert response is None
