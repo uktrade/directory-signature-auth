@@ -103,6 +103,19 @@ pip install -e git+https://git@github.com/uktrade/directory-signature-auth.git@v
     $ cd directory-signature-auth
     $ make
 
+## Publish to PyPI
+
+The package should be published to PyPI on merge to master. If you need to do it locally then get the credentials from rattic and add the environment variables to your host machine:
+
+| Setting                     |
+| --------------------------- |
+| DIRECTORY_PYPI_USERNAME     |
+| DIRECTORY_PYPI_PASSWORD     |
+
+
+Then run the following command:
+
+    make publish
 
 [code-climate-image]: https://codeclimate.com/github/uktrade/directory-signature-auth/badges/issue_count.svg
 [code-climate]: https://codeclimate.com/github/uktrade/directory-signature-auth
