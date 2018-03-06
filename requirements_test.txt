@@ -8,8 +8,8 @@ certifi==2017.4.17        # via requests
 chardet==3.0.4            # via requests
 codecov==2.0.9
 coverage==4.4.1           # via codecov, pytest-cov
-django>=1.9,<2.0a1
-djangorestframework==3.4.7
+django==1.11.11
+djangorestframework==3.7.7
 flake8==3.0.4
 idna==2.5                 # via requests
 mccabe==0.5.3             # via flake8
