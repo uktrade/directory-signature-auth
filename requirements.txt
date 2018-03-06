@@ -6,7 +6,7 @@
 #
 certifi==2018.1.18        # via requests
 chardet==3.0.4            # via requests
-django==1.11.5
+django>=1.9,<2.0a1
 djangorestframework==3.4.7
 idna==2.6                 # via requests
 mohawk==0.3.4
