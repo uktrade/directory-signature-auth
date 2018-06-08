@@ -2,8 +2,6 @@
 Export Directory API client
 """
 import ast
-import pip.download
-from pip.req import parse_requirements
 import re
 from setuptools import setup, find_packages
 
