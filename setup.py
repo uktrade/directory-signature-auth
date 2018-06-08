@@ -17,13 +17,6 @@ def get_version():
         ))
 
 
-def get_requirements():
-    return [str(r.req) for r in list(parse_requirements(
-        'requirements.txt',
-        session=pip.download.PipSession()
-    ))]
-
-
 setup(
     name='sigauth',
     version=get_version(),
@@ -34,7 +27,11 @@ setup(
     packages=find_packages(exclude=["tests.*", "tests"]),
     long_description=open('README.md').read(),
     include_package_data=True,
-    install_requires=get_requirements(),
+    install_requires=[
+        'django>=1.9,<2.0a1',
+        'djangorestframework>=3.4.7,<4.0.0',
+        'mohawk>=0.3.4,<1.0.0',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
