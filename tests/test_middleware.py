@@ -1,59 +1,56 @@
-from sigauth.middleware import SignatureCheckMiddlewareBase
+from django.urls import reverse
+
 from sigauth.utils import RequestSigner
 
 
-SECRET = 'super secret'
-SENDER_ID = 'test sender'
-
-
-class SignatureRejectionMiddleware(SignatureCheckMiddlewareBase):
-    secret = SECRET
-
-
-def test_signature_rejection_rejects_missing_signature(rf):
-    request = rf.get('/')
-
-    response = SignatureRejectionMiddleware().process_request(request)
+def test_signature_rejection_rejects_missing_signature(client):
+    response = client.get(reverse('url-two'))
 
     assert response.status_code == 401
 
 
-def test_signature_rejection_rejects_invalid_signature(rf):
-
-    request = rf.get('/', HTTP_X_SIGNATURE='NOT-CORRECT', CONTENT_TYPE='')
-
-    response = SignatureRejectionMiddleware().process_request(request)
+def test_signature_rejection_rejects_invalid_signature(client):
+    response = client.get(
+        reverse('url-two'), HTTP_X_SIGNATURE='NOT-CORRECT', CONTENT_TYPE=''
+    )
 
     assert response.status_code == 401
 
 
-def test_signature_rejection_accepts_valid_signature(rf, settings):
+def test_signature_rejection_accepts_valid_signature(client, settings):
     # in practive the signature is generated on the server making the request.
     # on the requesting server, it will know the shared secret
-    signer = RequestSigner(secret=SECRET)
+    signer = RequestSigner(secret=settings.SIGNATURE_SECRET)
 
     headers = signer.get_signature_headers(
-        url='/',
+        url=reverse('url-two'),
         body='',
         method='GET',
         content_type=''
     )
 
-    request = rf.get(
-        '/',
+    response = client.get(
+        reverse('url-two'),
         HTTP_X_SIGNATURE=headers[signer.header_name],
         CONTENT_TYPE='',
     )
 
-    response = SignatureRejectionMiddleware().process_request(request)
-
-    assert response is None
+    assert response.status_code == 200
 
 
-def test_signature_check_skipped(rf, settings):
-    settings.URLS_EXCLUDED_FROM_SIGNATURE_CHECK = ['/']
-    request = rf.get('/')
+def test_signature_check_skipped(client):
+    response = client.get(reverse('url-one'))
 
-    response = SignatureRejectionMiddleware().process_request(request)
+    assert response.status_code == 200
 
-    assert response is None
+
+def test_signature_check_not_skipped(client, settings):
+    response = client.get(reverse('url-two'))
+
+    assert response.status_code == 401
+
+
+def test_404(client, settings):
+    response = client.get('/foo')
+
+    assert response.status_code == 404

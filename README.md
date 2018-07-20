@@ -91,6 +91,22 @@ class SignatureCheckMixin:
 
 Note that in the above examples, the client's `settings.API_SIGNATURE_SECRET` must be the same value as api's `settings.SIGNATURE_SECRET`
 
+### Middleware
+
+Some services may expect every request to require signature checks. This library implements a wrapper around `RequestSignatureChecker` for Django middleware to facilitate this: `SignatureCheckMiddlewareBase`. It must be sub-classed to set the secret:
+
+```
+from sigauth.middleware import SignatureCheckMiddlewareBase
+
+from django.conf import settings
+
+class SignatureCheckMiddleware(SignatureCheckMiddlewareBase):
+    secret = settings.SIGNATURE_SECRET
+
+```
+
+`SignatureCheckMiddleware` can then be added to `MIDDLEWARE_CLASSES` setting. Set `SIGAUTH_URL_NAMES_WHITELIST` settings to a list of url names that should be excluded from checks.
+
 ## Installation
 
 ```shell
