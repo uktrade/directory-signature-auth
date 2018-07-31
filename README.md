@@ -3,7 +3,6 @@
 [![code-climate-image]][code-climate]
 [![circle-ci-image]][circle-ci]
 [![codecov-image]][codecov]
-[![gemnasium-image]][gemnasium]
 
 **Library implementing Hawk authentication scheme using a message authentication code (MAC) algorithm to provide partial HTTP request cryptographic verification.**
 
@@ -141,6 +140,3 @@ Then run the following command:
 
 [codecov-image]: https://codecov.io/gh/uktrade/directory-signature-auth/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/uktrade/directory-signature-auth
-
-[gemnasium-image]: https://gemnasium.com/badges/github.com/uktrade/directory-signature-auth.svg
-[gemnasium]: https://gemnasium.com/github.com/uktrade/directory-signature-auth
