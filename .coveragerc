@@ -1,2 +1,2 @@
 [run]
-omit = .venv/*,setup.py,sigauth/version.py
+omit = .venv/*,setup.py

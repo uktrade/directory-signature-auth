@@ -1,23 +1,12 @@
 """
 Export Directory API client
 """
-import ast
-import re
 from setuptools import setup, find_packages
-
-
-def get_version():
-    pattern = re.compile(r'__version__\s+=\s+(.*)')
-
-    with open('sigauth/version.py', 'rb') as src:
-        return str(ast.literal_eval(
-            pattern.search(src.read().decode('utf-8')).group(1)
-        ))
 
 
 setup(
     name='sigauth',
-    version=get_version(),
+    version='4.0.1',
     url='https://github.com/uktrade/directory-signature-auth',
     license='MIT',
     author='Department for International Trade',
