@@ -9,13 +9,14 @@ default_content = ''
 
 
 class RequestSigner:
+    algorithm = 'sha256'
     header_name = 'X-Signature'
     secret = None
-    sender_id = 'directory'
-    algorithm = 'sha256'
+    sender_id = None
 
-    def __init__(self, secret):
+    def __init__(self, secret, sender_id):
         self.secret = secret
+        self.sender_id = sender_id
 
     def get_signature_headers(self, url, body, method, content_type):
         sender = Sender(
