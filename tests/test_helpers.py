@@ -1,11 +1,11 @@
-from sigauth import utils
+from sigauth import helpers
 
 
 SECRET = 'super-duper-secret'
 
 
 def test_signer_without_body():
-    signer = utils.RequestSigner(secret=SECRET)
+    signer = helpers.RequestSigner(secret=SECRET, sender_id='test')
 
     headers = signer.get_signature_headers(
         url='http://e.co/',
@@ -14,11 +14,11 @@ def test_signer_without_body():
         content_type='application/json'
     )
 
-    assert 'id="directory' in headers[signer.header_name]
+    assert 'id="test' in headers[signer.header_name]
 
 
 def test_signer_with_body():
-    signer = utils.RequestSigner(secret=SECRET)
+    signer = helpers.RequestSigner(secret=SECRET, sender_id='test')
 
     headers = signer.get_signature_headers(
         url='http://e.co/',
@@ -27,18 +27,18 @@ def test_signer_with_body():
         content_type='application/json'
     )
 
-    assert 'id="directory' in headers[signer.header_name]
+    assert 'id="test' in headers[signer.header_name]
 
 
 def test_request_signer_passes_correct_secret_to_signer(settings):
-    signer = utils.RequestSigner(secret=SECRET)
+    signer = helpers.RequestSigner(secret=SECRET, sender_id='test')
 
     assert signer.secret == SECRET
 
 
 def test_get_path_with_querystring():
-    assert utils.get_path('http://e.co/?thing=1') == '/?thing=1'
+    assert helpers.get_path('http://e.co/?thing=1') == '/?thing=1'
 
 
 def test_get_path_without_querystring():
-    assert utils.get_path('http://e.co/aa/') == '/aa/'
+    assert helpers.get_path('http://e.co/aa/') == '/aa/'

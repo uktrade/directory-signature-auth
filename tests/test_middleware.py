@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from sigauth.utils import RequestSigner
+from sigauth.helpers import RequestSigner
 
 
 def test_signature_rejection_rejects_missing_signature(client):
@@ -20,7 +20,7 @@ def test_signature_rejection_rejects_invalid_signature(client):
 def test_signature_rejection_accepts_valid_signature(client, settings):
     # in practive the signature is generated on the server making the request.
     # on the requesting server, it will know the shared secret
-    signer = RequestSigner(secret=settings.SIGNATURE_SECRET)
+    signer = RequestSigner(secret=settings.SIGNATURE_SECRET, sender_id='test')
 
     headers = signer.get_signature_headers(
         url=reverse('url-two'),

@@ -3,7 +3,7 @@ import abc
 from django.conf import settings
 from django.http import HttpResponse
 
-from sigauth.utils import RequestSignatureChecker
+from sigauth.helpers import RequestSignatureChecker
 
 
 class SignatureCheckMiddlewareBase(abc.ABC):

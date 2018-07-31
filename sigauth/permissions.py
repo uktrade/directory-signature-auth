@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from sigauth.utils import RequestSignatureChecker
+from sigauth.helpers import RequestSignatureChecker
 
 
 class SignatureCheckPermissionBase(permissions.BasePermission):
