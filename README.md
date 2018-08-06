@@ -142,5 +142,5 @@ Then run the following command:
 [codecov-image]: https://codecov.io/gh/uktrade/directory-signature-auth/branch/master/graph/badge.svg
 [codecov]: https://codecov.io/gh/uktrade/directory-signature-auth
 
-[pypi-image]: https://badge.fury.io/py/directory-signature-auth.svg
-[pypi]: https://badge.fury.io/py/directory-signature-auth
+[pypi-image]: https://badge.fury.io/py/sigauth.svg
+[pypi]: https://badge.fury.io/py/sigauth
