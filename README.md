@@ -105,7 +105,7 @@ class SignatureCheckMiddleware(SignatureCheckMiddlewareBase):
 
 ```
 
-`SignatureCheckMiddleware` can then be added to `MIDDLEWARE_CLASSES` setting. Set `SIGAUTH_URL_NAMES_WHITELIST` settings to a list of url names that should be excluded from checks.
+`SignatureCheckMiddleware` can then be added to the `MIDDLEWARE` setting (or `MIDDLEWARE_CLASSES` if using Django < 2). Set `SIGAUTH_URL_NAMES_WHITELIST` settings to a list of url names that should be excluded from checks.
 
 ## Installation
 

@@ -2,11 +2,12 @@ import abc
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.utils.deprecation import MiddlewareMixin
 
 from sigauth.helpers import RequestSignatureChecker
 
 
-class SignatureCheckMiddlewareBase(abc.ABC):
+class SignatureCheckMiddlewareBase(MiddlewareMixin, abc.ABC):
 
     request_checker = None
 

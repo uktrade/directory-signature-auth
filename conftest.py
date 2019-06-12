@@ -3,6 +3,6 @@ def pytest_configure():
     settings.configure(
         ROOT_URLCONF='tests.urls',
         SIGAUTH_URL_NAMES_WHITELIST=['url-one'],
-        MIDDLEWARE_CLASSES=['tests.middleware.TestSignatureCheckMiddleware'],
+        MIDDLEWARE=['tests.middleware.TestSignatureCheckMiddleware'],
         SIGNATURE_SECRET='super secret',
     )
