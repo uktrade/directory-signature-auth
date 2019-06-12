@@ -15,7 +15,7 @@ setup(
     long_description=open('README.md').read(),
     include_package_data=True,
     install_requires=[
-        'django>=1.9,<2.0a1',
+        'django>=1.9,<3.0a1',
         'djangorestframework>=3.4.7,<4.0.0',
         'mohawk>=0.3.4,<1.0.0',
     ],
@@ -24,6 +24,9 @@ setup(
         'Environment :: Web Environment',
         'Framework :: Django',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
