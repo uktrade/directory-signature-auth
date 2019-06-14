@@ -20,6 +20,18 @@ setup(
         'djangorestframework>=3.4.7,<4.0.0',
         'mohawk>=0.3.4,<1.0.0',
     ],
+    extras_require={
+        'test': [
+            'pytest==3.10.0',
+            'pytest-cov==2.7.1',
+            'pytest-django==3.5.0',
+            'flake8==3.0.4',
+            'wheel>=0.31.0,<1.0.0',
+            'setuptools>=38.6.0,<39.0.0',
+            'codecov',
+            'twine',
+        ]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
