@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sigauth',
-    version='4.1.0',
+    version='4.1.1',
     url='https://github.com/uktrade/directory-signature-auth',
     license='MIT',
     author='Department for International Trade',
@@ -16,7 +16,7 @@ setup(
     long_description_content_type='text/markdown',
     include_package_data=True,
     install_requires=[
-        'django>=1.9,<3.0a1',
+        'django>=1.11.22,<3.0a1',
         'djangorestframework>=3.4.7,<4.0.0',
         'mohawk>=0.3.4,<1.0.0',
     ],
