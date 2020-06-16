@@ -11,7 +11,7 @@ def test_signature_rejection_rejects_missing_signature(client):
 
 def test_signature_rejection_rejects_invalid_signature(client):
     response = client.get(
-        reverse('url-two'), HTTP_X_SIGNATURE='NOT-CORRECT', CONTENT_TYPE=''
+        reverse('url-two'), HTTP_X_SIGNATURE='hawk INCORRECT', CONTENT_TYPE=''
     )
 
     assert response.status_code == 401
