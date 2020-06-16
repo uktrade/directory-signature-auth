@@ -1,6 +1,13 @@
 
 # Changelog
 
+
+## 4.2.0
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/24/files) (2020-06-16)
+
+### Implemented enhancements
+- No ticket - Increase range of allow mohawk versions
+
 ## 4.1.1
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/23/files) (2019-07-04)
 
