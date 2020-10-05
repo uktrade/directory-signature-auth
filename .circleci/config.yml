@@ -11,7 +11,7 @@ jobs:
             . .venv/bin/activate
             make test_requirements
             make test
-	    codecov
+            codecov
 
   publish_to_pypi:
     docker:
