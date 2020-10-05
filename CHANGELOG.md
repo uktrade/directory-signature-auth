@@ -1,6 +1,9 @@
 
 # Changelog
 
+## 4.3.0
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/25/files) (2020-10-05)
+- No ticket - bump version of requirements in setup.py so Django 3.x can start using this package
 
 ## 4.2.0
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/24/files) (2020-06-16)
