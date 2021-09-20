@@ -1,11 +1,18 @@
+import logging
 from urllib.parse import urlsplit
 
 from mohawk import Receiver, Sender
 from mohawk.exc import HawkFail
+from rest_framework.exceptions import AuthenticationFailed
+from django.core.cache import cache
 
+NO_CREDENTIALS_MESSAGE = 'Authentication credentials were not provided.'
+INCORRECT_CREDENTIALS_MESSAGE = 'Incorrect authentication credentials'
 
 default_content_type = 'text/plain'
 default_content = ''
+
+logger = logging.getLogger(__name__)
 
 
 class RequestSigner:
@@ -37,6 +44,7 @@ class RequestSigner:
 
 
 class RequestSignatureChecker:
+
     header_name = 'HTTP_X_SIGNATURE'
     secret = None
     algorithm = 'sha256'
@@ -62,6 +70,8 @@ class RequestSignatureChecker:
 
         """
 
+        if self.header_name not in request.META:
+            raise AuthenticationFailed(NO_CREDENTIALS_MESSAGE)
         content_type = get_content_type(request.META.get('CONTENT_TYPE'))
         try:
             return Receiver(
@@ -71,9 +81,15 @@ class RequestSignatureChecker:
                 request.method,
                 content=get_content(request.body),
                 content_type=get_content_type(content_type),
+                seen_nonce=seen_nonce,
             )
-        except HawkFail:
-            return False
+        except HawkFail as e:
+            logger.warning(
+                'Failed authentication {e}'.format(
+                    e=e,
+                )
+            )
+            raise AuthenticationFailed(INCORRECT_CREDENTIALS_MESSAGE)
 
 
 def get_path(url):
@@ -100,3 +116,25 @@ def get_content_type(content_type):
 
 def get_content(content):
     return default_content if content is None else content
+
+
+def seen_nonce(access_key_id, nonce, _):
+    """Returns if the passed access_key_id/nonce combination has been
+    used within 60 seconds
+    """
+    cache_key = 'hawk_authentication:{access_key_id}:{nonce}'.format(
+        access_key_id=access_key_id,
+        nonce=nonce,
+    )
+
+    # cache.add only adds key if it isn't present
+    seen_cache_key = not cache.add(
+        cache_key,
+        True,
+        timeout=60,
+    )
+
+    if seen_cache_key:
+        logger.warning('Already seen nonce {nonce}'.format(nonce=nonce))
+
+    return seen_cache_key
