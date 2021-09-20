@@ -5,4 +5,5 @@ def pytest_configure():
         SIGAUTH_URL_NAMES_WHITELIST=['url-one'],
         MIDDLEWARE=['tests.middleware.TestSignatureCheckMiddleware'],
         SIGNATURE_SECRET='super secret',
+        SECRET_KEY='test-key',
     )

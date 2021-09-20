@@ -120,7 +120,8 @@ def get_content(content):
 
 def seen_nonce(access_key_id, nonce, _):
     """Returns if the passed access_key_id/nonce combination has been
-    used within 60 seconds
+    60 seconds is a skew in either direction, not just the past.
+    Hence a 120 second window in which a request could be replayed
     """
     cache_key = 'hawk_authentication:{access_key_id}:{nonce}'.format(
         access_key_id=access_key_id,

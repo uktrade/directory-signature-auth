@@ -1,20 +1,21 @@
 from django.urls import reverse
-
+import pytest
 from sigauth.helpers import RequestSigner
+from rest_framework.exceptions import AuthenticationFailed
 
 
 def test_signature_rejection_rejects_missing_signature(client):
-    response = client.get(reverse('url-two'))
-
-    assert response.status_code == 401
+    with pytest.raises(AuthenticationFailed):
+        response = client.get(reverse('url-two'))
+        assert response.status_code == 401
 
 
 def test_signature_rejection_rejects_invalid_signature(client):
-    response = client.get(
-        reverse('url-two'), HTTP_X_SIGNATURE='hawk INCORRECT', CONTENT_TYPE=''
-    )
-
-    assert response.status_code == 401
+    with pytest.raises(AuthenticationFailed):
+        response = client.get(
+            reverse('url-two'), HTTP_X_SIGNATURE='hawk INCORRECT', CONTENT_TYPE=''
+        )
+        assert response.status_code == 401
 
 
 def test_signature_rejection_accepts_valid_signature(client, settings):
@@ -45,9 +46,9 @@ def test_signature_check_skipped(client):
 
 
 def test_signature_check_not_skipped(client, settings):
-    response = client.get(reverse('url-two'))
-
-    assert response.status_code == 401
+    with pytest.raises(AuthenticationFailed):
+        response = client.get(reverse('url-two'))
+        assert response.status_code == 401
 
 
 def test_404(client, settings):

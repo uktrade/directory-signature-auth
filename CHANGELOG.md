@@ -1,5 +1,5 @@
-
 # Changelog
+## 5.0.0
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/25/files) (2021-09-20)
 GP2-3409 - hawk authentication add nonce check and throw exception
 
