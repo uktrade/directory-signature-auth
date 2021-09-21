@@ -46,6 +46,7 @@ class RequestSigner:
 class RequestSignatureChecker:
 
     header_name = 'HTTP_X_SIGNATURE'
+    authorisation_header_name = 'HTTP_AUTHORIZATION'
     secret = None
     algorithm = 'sha256'
 
@@ -69,11 +70,39 @@ class RequestSignatureChecker:
             bool or Receiver : False if rejected, Receiver instance if accepted
 
         """
-
-        if self.header_name not in request.META:
+        if self.header_name in request.META:
+            # HTTP_X_SIGNATURE is present check using this method
+            return self.test_hawk_signature(request)
+        elif self.authorisation_header_name in request.META:
+            # HTTP_AUTHORIZATION is present check using this method
+            return self.test_hawk_authorisation(request)
+        else:
+            # No Authorisation header present
             raise AuthenticationFailed(NO_CREDENTIALS_MESSAGE)
-        content_type = get_content_type(request.META.get('CONTENT_TYPE'))
+
+
+    def test_hawk_authorisation(self, request):
         try:
+            return Receiver(
+                self.lookup_credentials,
+                request.META[self.authorisation_header_name],
+                request.build_absolute_uri(),
+                request.method,
+                content=request.body,
+                content_type=request.content_type,
+                seen_nonce=seen_nonce,
+            )
+        except HawkFail as e:
+            logger.warning(
+                'Failed authentication {e}'.format(
+                    e=e,
+                )
+            )
+            raise AuthenticationFailed(INCORRECT_CREDENTIALS_MESSAGE)
+
+    def test_hawk_signature(self, request):
+        try:
+            content_type = get_content_type(request.META.get('CONTENT_TYPE'))
             return Receiver(
                 self.lookup_credentials,
                 request.META.get(self.header_name),
