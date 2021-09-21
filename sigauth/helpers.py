@@ -45,7 +45,7 @@ class RequestSigner:
 
 class RequestAuthorisationSigner:
     algorithm = 'sha256'
-    header_name = 'authorisation'
+    header_name = 'authorization'
     secret = None
     sender_id = None
 
@@ -74,7 +74,7 @@ class RequestAuthorisationSigner:
 class RequestSignatureChecker:
 
     header_name = 'HTTP_X_SIGNATURE'
-    authorisation_header_name = 'HTTP_AUTHORISATION'
+    authorisation_header_name = 'HTTP_AUTHORIZATION'
     secret = None
     algorithm = 'sha256'
 
@@ -102,7 +102,7 @@ class RequestSignatureChecker:
             # HTTP_X_SIGNATURE is present check using this method
             return self.test_hawk_signature(request)
         elif self.authorisation_header_name in request.META:
-            # HTTP_AUTHORISATION is present check using this method
+            # HTTP_AUTHORIZATION is present check using this method
             return self.test_hawk_authorisation(request)
         else:
             # No Authorisation header present

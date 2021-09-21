@@ -54,7 +54,7 @@ def test_signature_rejection_accepts_valid_authorisation(client, settings):
     response = client.get(
         reverse('url-two'),
         data='',
-        HTTP_AUTHORISATION=headers[signer.header_name],
+        HTTP_AUTHORIZATION=headers[signer.header_name],
         CONTENT_TYPE='',
     )
 
