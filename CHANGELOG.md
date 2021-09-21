@@ -1,7 +1,8 @@
 # Changelog
-## 5.1.0
-[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/25/files) (2021-09-22)
+## 5.1.1
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/27/files) (2021-09-22)
 GP2-3409-implement-standard-hawk-option
+- improve test coverage 
 
 ## 5.0.0
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/25/files) (2021-09-20)
