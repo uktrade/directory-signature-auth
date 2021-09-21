@@ -1,6 +1,6 @@
 from django.urls import reverse
 import pytest
-from sigauth.helpers import RequestSigner
+from sigauth.helpers import RequestSigner, RequestAuthorisationSigner
 from rest_framework.exceptions import AuthenticationFailed
 
 
@@ -33,6 +33,28 @@ def test_signature_rejection_accepts_valid_signature(client, settings):
     response = client.get(
         reverse('url-two'),
         HTTP_X_SIGNATURE=headers[signer.header_name],
+        CONTENT_TYPE='',
+    )
+
+    assert response.status_code == 200
+
+
+def test_signature_rejection_accepts_valid_authorisation(client, settings):
+    # in practice the signature is generated on the server making the request.
+    # on the requesting server, it will know the shared secret
+    signer = RequestAuthorisationSigner(secret=settings.SIGNATURE_SECRET, sender_id='test')
+
+    headers = signer.get_signature_headers(
+        url='http://testserver' + reverse('url-two'),
+        body='',
+        method='GET',
+        content_type=''
+    )
+
+    response = client.get(
+        reverse('url-two'),
+        data='',
+        HTTP_AUTHORIZATION=headers[signer.header_name],
         CONTENT_TYPE='',
     )
 
