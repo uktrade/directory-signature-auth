@@ -43,10 +43,38 @@ class RequestSigner:
         }
 
 
+class RequestAuthorisationSigner:
+    algorithm = 'sha256'
+    header_name = 'authorisation'
+    secret = None
+    sender_id = None
+
+    def __init__(self, secret, sender_id):
+        self.secret = secret
+        self.sender_id = sender_id
+
+    def get_signature_headers(self, url, body, method, content_type):
+        sender = Sender(
+            {
+                'id': self.sender_id,
+                'key': self.secret,
+                'algorithm': self.algorithm
+            },
+            url,
+            method,
+            content=body,
+            content_type=content_type,
+        )
+
+        return {
+            self.header_name: sender.request_header
+        }
+
+
 class RequestSignatureChecker:
 
     header_name = 'HTTP_X_SIGNATURE'
-    authorisation_header_name = 'HTTP_AUTHORIZATION'
+    authorisation_header_name = 'HTTP_AUTHORISATION'
     secret = None
     algorithm = 'sha256'
 
@@ -74,12 +102,11 @@ class RequestSignatureChecker:
             # HTTP_X_SIGNATURE is present check using this method
             return self.test_hawk_signature(request)
         elif self.authorisation_header_name in request.META:
-            # HTTP_AUTHORIZATION is present check using this method
+            # HTTP_AUTHORISATION is present check using this method
             return self.test_hawk_authorisation(request)
         else:
             # No Authorisation header present
             raise AuthenticationFailed(NO_CREDENTIALS_MESSAGE)
-
 
     def test_hawk_authorisation(self, request):
         try:
