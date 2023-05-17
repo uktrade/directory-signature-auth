@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import re_path
 from django.http import HttpResponse
 from django.views import View
 
@@ -9,12 +9,12 @@ class TestView(View):
 
 
 urlpatterns = [
-    url(
+    re_path(
         r'url-one',
         TestView.as_view(),
         name='url-one'
     ),
-    url(
+    re_path(
         r'url-two',
         TestView.as_view(),
         name='url-two'
