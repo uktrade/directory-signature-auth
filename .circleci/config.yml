@@ -15,7 +15,7 @@ jobs:
 
   publish_to_pypi:
     docker:
-      - image: circleci/python:3.6.6
+      - image: circleci/python:3.9.13
     steps:
       - checkout
       - run:
