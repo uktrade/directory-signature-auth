@@ -88,7 +88,7 @@ class RequestSignatureChecker:
             'algorithm': self.algorithm
         }
 
-    def test_signature(self, request, check_nonce=True):
+    def test_signature(self, request, **kwargs):
         """
         Thest that the signature header matches the expected value.
 
@@ -98,6 +98,7 @@ class RequestSignatureChecker:
             bool or Receiver : False if rejected, Receiver instance if accepted
 
         """
+        check_nonce = kwargs.get("check_nonce")
         if self.header_name in request.META:
             # HTTP_X_SIGNATURE is present check using this method
             return self.test_hawk_signature(request, check_nonce=check_nonce)
@@ -131,8 +132,8 @@ class RequestSignatureChecker:
 
         content_type = get_content_type(request.META.get('CONTENT_TYPE'))
         receiver_kwargs = {
-            "content":get_content(request.body),
-            "content_type":get_content_type(content_type),
+            "content": get_content(request.body),
+            "content_type": get_content_type(content_type),
         }
         if check_nonce:
             receiver_kwargs.update({"seen_nonce": seen_nonce})
