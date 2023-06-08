@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="sigauth",
-    version="5.2.0",
+    version="5.2.1",
     url="https://github.com/uktrade/directory-signature-auth",
     license="MIT",
     author="Department for International Trade",

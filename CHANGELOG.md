@@ -1,4 +1,7 @@
 # Changelog
+
+### 5.2.1
+- Enabled permissions option to stop nonce check
 ## 5.1.1
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/27/files) (2021-09-22)
 GP2-3409-implement-standard-hawk-option
