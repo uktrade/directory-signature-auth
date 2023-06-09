@@ -88,7 +88,7 @@ class RequestSignatureChecker:
             'algorithm': self.algorithm
         }
 
-    def test_signature(self, request):
+    def test_signature(self, request, **kwargs):
         """
         Thest that the signature header matches the expected value.
 
@@ -98,9 +98,10 @@ class RequestSignatureChecker:
             bool or Receiver : False if rejected, Receiver instance if accepted
 
         """
+        check_nonce = kwargs.get("check_nonce")
         if self.header_name in request.META:
             # HTTP_X_SIGNATURE is present check using this method
-            return self.test_hawk_signature(request)
+            return self.test_hawk_signature(request, check_nonce=check_nonce)
         elif self.authorisation_header_name in request.META:
             # HTTP_AUTHORIZATION is present check using this method
             return self.test_hawk_authorisation(request)
@@ -127,7 +128,15 @@ class RequestSignatureChecker:
             )
             raise AuthenticationFailed(INCORRECT_CREDENTIALS_MESSAGE)
 
-    def test_hawk_signature(self, request):
+    def test_hawk_signature(self, request, check_nonce=True):
+
+        content_type = get_content_type(request.META.get('CONTENT_TYPE'))
+        receiver_kwargs = {
+            "content": get_content(request.body),
+            "content_type": get_content_type(content_type),
+        }
+        if check_nonce:
+            receiver_kwargs.update({"seen_nonce": seen_nonce})
         try:
             content_type = get_content_type(request.META.get('CONTENT_TYPE'))
             return Receiver(
@@ -135,9 +144,7 @@ class RequestSignatureChecker:
                 request.META.get(self.header_name),
                 request.get_full_path(),
                 request.method,
-                content=get_content(request.body),
-                content_type=get_content_type(content_type),
-                seen_nonce=seen_nonce,
+                **receiver_kwargs
             )
         except HawkFail as e:
             logger.warning(
@@ -192,6 +199,6 @@ def seen_nonce(access_key_id, nonce, _):
     )
 
     if seen_cache_key:
-        logger.warning('Already seen nonce {nonce}'.format(nonce=nonce))
+        logger.warning('Already seen nonce {nonce} via sigauth'.format(nonce=nonce))
 
     return seen_cache_key

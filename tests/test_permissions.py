@@ -4,10 +4,10 @@ from unittest.mock import patch, Mock
 
 
 @patch('sigauth.helpers.RequestSignatureChecker.test_signature')
-def test_signature_has_permission(mock_test_signature):
+def test_signature_has_permission_with_nonce_check(mock_test_signature):
     permission = permissions.SignatureCheckPermissionBase()
     request = Mock()
 
     permission.has_permission(request=request, view=Mock())
 
-    mock_test_signature.assert_called_once_with(request)
+    mock_test_signature.assert_called_once_with(request, check_nonce=True)
