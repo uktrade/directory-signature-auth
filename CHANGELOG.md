@@ -1,7 +1,7 @@
 # Changelog
 
 ### 5.2.2
-[Full Changelog]() (2023-07-05)
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/35) (2023-07-05)
 - bump django to 4.2.3
 
 ### 5.2.1
