@@ -1,5 +1,9 @@
 # Changelog
 
+### 5.2.2
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/35) (2023-07-05)
+- bump django to 4.2.3
+
 ### 5.2.1
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/34/files) (2023-06-08)
 - Enabled permissions option to stop nonce check
