@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     include_package_data=True,
     install_requires=[
-        "django>=3.2.19, ~=4.2.7",
+        "django>=3.2.19, ~=4.2.3",
         "djangorestframework>=3.4.7,<4.0.0",
         "mohawk>=0.3.4,<2.0.0",
     ],
