@@ -1,7 +1,11 @@
 # Changelog
 
+### 5.2.6
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/39) (2024-02-21)
+- Set Django Minimum 4.2.10
+
 ### 5.2.5
-[Full Changelog]() (2024-02-2)
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/38) (2024-02-2)
 - Set Django Minimum 4.2.8 and Maximum 5.0
 
 ### 5.2.4
