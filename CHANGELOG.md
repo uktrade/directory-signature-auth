@@ -1,5 +1,9 @@
 # Changelog
 
+### 5.2.7
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/39) (2024-02-27)
+- POLS-94 Add code-owners file
+
 ### 5.2.6
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/39) (2024-02-21)
 - Set Django Minimum 4.2.10
