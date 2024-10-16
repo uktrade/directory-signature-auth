@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, include
 from django.http import HttpResponse
 from django.views import View
 
@@ -6,6 +6,15 @@ from django.views import View
 class TestView(View):
     def get(self, *args, **kwargs):
         return HttpResponse()
+
+
+namespace_urls = [
+    re_path(
+        r'url-three',
+        TestView.as_view(),
+        name='url-three',
+    ),
+]
 
 
 urlpatterns = [
@@ -19,4 +28,5 @@ urlpatterns = [
         TestView.as_view(),
         name='url-two'
     ),
+    re_path(r'^blah/', include((namespace_urls, 'blah'), namespace='blah')),
 ]

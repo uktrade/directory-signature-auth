@@ -30,6 +30,10 @@ class SignatureCheckMiddlewareBase(MiddlewareMixin, abc.ABC):
         url_name = request.resolver_match.url_name
         url_app_name = request.resolver_match.namespace
 
+        print(settings.SIGAUTH_NAMESPACE_WHITELIST)
+        print(request.resolver_match.url_name)
+        print(request.resolver_match.namespace)
+
         url_in_whitelist = url_name in settings.SIGAUTH_URL_NAMES_WHITELIST
 
         try:
