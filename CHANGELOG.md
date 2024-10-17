@@ -1,5 +1,9 @@
 # Changelog
 
+### 5.3.0
+[Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/41) (2024-10-16)
+- Added namespace whitelist 'SIGAUTH_NAMESPACE_WHITELIST'
+
 ### 5.2.7
 [Full Changelog](https://github.com/uktrade/directory-signature-auth/pull/39) (2024-02-27)
 - POLS-94 Add code-owners file

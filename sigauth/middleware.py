@@ -28,4 +28,15 @@ class SignatureCheckMiddlewareBase(MiddlewareMixin, abc.ABC):
     @staticmethod
     def should_check(request):
         url_name = request.resolver_match.url_name
-        return url_name not in settings.SIGAUTH_URL_NAMES_WHITELIST
+        url_app_name = request.resolver_match.namespace
+
+        url_in_whitelist = url_name in settings.SIGAUTH_URL_NAMES_WHITELIST
+
+        try:
+            namespace_in_whitelist = url_app_name in settings.SIGAUTH_NAMESPACE_WHITELIST
+        except AttributeError:
+            namespace_in_whitelist = False
+
+        if url_in_whitelist or namespace_in_whitelist:
+            return False
+        return True

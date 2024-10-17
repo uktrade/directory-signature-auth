@@ -83,7 +83,7 @@ def test_signature_rejection_accepts_in_valid_raise_exceptiom(client, settings):
         assert response.status_code == 403
 
 
-def test_signature_check_skipped(client):
+def test_signature_check_skipped_with_url(client):
     response = client.get(reverse('url-one'))
 
     assert response.status_code == 200
@@ -99,3 +99,9 @@ def test_404(client, settings):
     response = client.get('/foo')
 
     assert response.status_code == 404
+
+
+def test_signature_skipped_with_namespace(client, settings):
+    response = client.get(reverse('blah:url-three'))
+
+    assert response.status_code == 200
